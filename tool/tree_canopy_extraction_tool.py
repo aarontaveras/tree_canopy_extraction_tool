@@ -68,16 +68,16 @@ ndviReclassOutput="C:/Temp/Ext_Tool_Temp/ndvirecout.img" #default output path re
 CanopyOutput="C:/Temp/Ext_Tool_Temp/canopyout.img" #default output path for final canopy raster
 
 #########################################################################
-# If running in a tool, get the parameters from the Arc Tool GUI
+# If running in a tool, get the parameters from the ArcGIS Pro tool GUI
 #########################################################################
 
-if (RunningInArcPro): #if running in a tool, get the parameters from the Arc Tool GUI
-    HhInput=arcpy.GetParameterAsText(0) #sets parameter for highest hit input in ArcMap
-    BeInput=arcpy.GetParameterAsText(1) #sets parameter for bare earth input in ArcMap
-    NAIP=arcpy.GetParameterAsText(2) #sets parameters for NIR image input in ArcMap
-    CanopyOutput=arcpy.GetParameterAsText(3) #sets parameter for canopy product output in ArcMap
-    LowHeightValueInput=arcpy.GetParameterAsText(4) #sets parameter for height value input in ArcMap
-    LowNDVIValueInput=arcpy.GetParameterAsText(5) #sets parameter for NDVI value input in ArcMap
+if (RunningInArcPro): #if running in a tool, get the parameters from the ArcGIS Pro tool GUI
+    HhInput=arcpy.GetParameterAsText(0) #sets parameter for highest hit input in ArcGIS Pro
+    BeInput=arcpy.GetParameterAsText(1) #sets parameter for bare earth input in ArcGIS Pro
+    NAIP=arcpy.GetParameterAsText(2) #sets parameters for NIR image input in ArcGIS Pro
+    CanopyOutput=arcpy.GetParameterAsText(3) #sets parameter for canopy product output in ArcGIS Pro
+    LowHeightValueInput=arcpy.GetParameterAsText(4) #sets parameter for height value input in ArcGIS Pro
+    LowNDVIValueInput=arcpy.GetParameterAsText(5) #sets parameter for NDVI value input in ArcGIS Pro
 
 #########################################################################
 # Prints all parameters for debugging
@@ -102,7 +102,7 @@ arcpy.env.overwriteOutput=True
 ## Main code (All processing scripts)
 #########################################################################
 
-MyPrint("#-----Begining processing-----#") #prints message to ArcMap dialog that processing has begun
+MyPrint("#-----Begining processing-----#") #prints message to ArcGIS Pro dialog that processing has begun
 
 MyPrint("""###############################################
 Creating non-ground raster
@@ -111,11 +111,11 @@ Creating non-ground raster
 try:
     arcpy.gp.Minus_sa(HhInput,BeInput,NonGroundOutput) #subtract bare earth raster from highest hit raster
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed to create non-ground raster-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed to create non-ground raster-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Reclassifying non-ground heights
@@ -126,11 +126,11 @@ LowHeightValue=LowHeightValueInput #creates an input variable for parameter (4) 
 try:
     arcpy.gp.Reclassify_sa(NonGroundOutput,"Value","0 "+LowHeightValue+" NODATA;"+LowHeightValue+" 500 1",HeightReclassOutput,"NODATA") #reclassify non-ground heights
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed to reclassify slope-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed to reclassify slope-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Extracting visual red and NIR bands from image
@@ -140,11 +140,11 @@ try:
     red=arcpy.CopyRaster_management(NAIP+"\Layer_1",red,"#","#","0","NONE","NONE","#","NONE","NONE") #extract visual red band from image
     nir=arcpy.CopyRaster_management(NAIP+"\Layer_4",nir,"#","#","0","NONE","NONE","#","NONE","NONE") #extract NIR band from image
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed image band Extraction-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed image band Extraction-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Calculating NDVI
@@ -156,11 +156,11 @@ try:
     Calc=arcpy.sa.Divide(Num, Denom)*100+100 #divide prerequisite results and calculate range
     Calc.save(ndvi) #save NDVI result
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed to calculate NDVI-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed to calculate NDVI-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Reclassifying NDVI
@@ -172,11 +172,11 @@ try:
     #reclassify NDVI
     arcpy.gp.Reclassify_sa(ndvi,"Value","0 "+LowNDVIValue+" NODATA;"+LowNDVIValue+" 200 1",ndviReclassOutput,"NODATA") #reclassify NDVI
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed to reclassify ndvi-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed to reclassify ndvi-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Intersecting LIDAR and NDVI datasets - Canopy Raster
@@ -187,8 +187,8 @@ try:
     Intersect=arcpy.sa.Float(Raster(HeightReclassOutput)*Raster(ndviReclassOutput)) #intersect height reclass raster from ndvi reclass raster
     Intersect.save(CanopyOutput) #save intersect result (canopy raster)
 
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Completed successfully-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
-    MyPrint(arcpy.GetMessages()) #prints ArcMap dialog processing messages
-    MyPrint("#-----Failed to intersect LIDAR and NDVI-----#") #prints message to ArcMap dialog
+    MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
+    MyPrint("#-----Failed to intersect LIDAR and NDVI-----#") #prints message to ArcGIS Pro dialog
