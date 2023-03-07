@@ -130,7 +130,7 @@ try:
     MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
     MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
-    MyPrint("#-----Failed to reclassify slope-----#") #prints message to ArcGIS Pro dialog
+    MyPrint("#-----Failed to reclassify non-ground height raster-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Extracting visual red and NIR bands from image
@@ -144,7 +144,7 @@ try:
     MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
     MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
-    MyPrint("#-----Failed image band Extraction-----#") #prints message to ArcGIS Pro dialog
+    MyPrint("#-----Failed to extract visual red and NIR bands-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Calculating NDVI
@@ -176,7 +176,7 @@ try:
     MyPrint("#-----Completed successfully-----#") #prints message to ArcGIS Pro dialog
 except:
     MyPrint(arcpy.GetMessages()) #prints ArcGIS Pro dialog processing messages
-    MyPrint("#-----Failed to reclassify ndvi-----#") #prints message to ArcGIS Pro dialog
+    MyPrint("#-----Failed to reclassify NDVI-----#") #prints message to ArcGIS Pro dialog
 
 MyPrint("""###############################################
 Intersecting LIDAR and NDVI datasets - Canopy Raster
